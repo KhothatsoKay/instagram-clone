@@ -72,6 +72,11 @@
     width: 360px;
     height: 22px;
 }
+.profile-pic {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
 .profile-pic img {
     height: 22px;
@@ -343,4 +348,7 @@ main {
 
 .body img {
     width: 100%;
+}
+.logout{
+    cursor: pointer;
 }
