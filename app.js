@@ -136,7 +136,7 @@ class App {
               console.log("New post:", post);
             });
 
-            document.getElementById("uploading").innerHTML += `${this.files[i].name} uploaded <br />`;
+            document.getElementById("uploading").innerHTML += `${this.files[i].name} uploaded. wait to be redirected back! <br />`;
           }
         );
       }
@@ -160,6 +160,9 @@ class App {
     })
       .then((docRef) => {
         console.log("Document written with ID: ", docRef.id);
+        this.redirectToApp();
+        this.$uploadContainer.style.display = "none";
+        this.$app.style.display = "block";
       })
       .catch((error) => {
         console.error("Error writing document: ", error);
