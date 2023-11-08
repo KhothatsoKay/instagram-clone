@@ -352,3 +352,47 @@ main {
 .logout{
     cursor: pointer;
 }
+#upload-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+#uploadForm{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 20px;
+    padding: 20px;
+}
+.options{
+    cursor: pointer;
+}
+#optionsModal {
+    display: none;
+  }
+  .modal {
+  display: none;
+  position: absolute;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  z-index: 1;
+  width: 300px;
+  height: auto;
+  text-align: center;
+}
+
+.modal-content {
+  display: flex;
+  flex-direction: column;
+  border: none !important;
+  cursor: pointer;
+}
+
+.modal-option {
+  text-decoration: none;
+  color: black;
+  border: none;
+}
