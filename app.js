@@ -23,11 +23,11 @@ class App {
     this.$sendButton = document.getElementById("send");
     this.user = null;
     this.posts = [];
+    this.selectedPostId = "";
     this.userId = "";
-    this.$ellipsisIcon = document.querySelector(".options .Igw0E");
-    this.$optionsModal = document.getElementById("optionsModal");
-
+    this.$userProfilePicture = document.querySelector(".story-image");
     this.$authUserText = document.querySelector(".auth-user");
+    this.$authUser = document.querySelector(".user-name");
     this.$logoutButton = document.querySelector(".logout");
     this.ui = new firebaseui.auth.AuthUI(auth);
     this.$logoutButton = document.querySelector(".logout");
@@ -56,9 +56,9 @@ class App {
         console.log(user.uid);
         this.userId = user.uid;
         this.$authUserText.innerHTML = user.displayName;
-        if (user.photoURL) {
-          this.user.profilePicture = user.photoURL;
-        }
+        this.$authUser.innerHTML = user.displayName;
+          this.$userProfilePicture.innerHTML = `<img class="story-image" alt="akhilboddu's profile picture" data-testid="user-avatar" draggable="false"
+          src=${user.photoUrl}/>`
         this.redirectToApp();
       } else {
         this.redirectToAuth();
@@ -149,12 +149,11 @@ class App {
       username: this.user.displayName,
       profilePicture: this.user.photoURL
     }));
-
-    db.collection("users").doc(this.userId).set({
-      posts: postObj
+    db.collection("posts").add({
+      posts: postObj,
     })
-      .then(() => {
-        console.log("Document successfully written!");
+      .then((docRef) => {
+        console.log("Document written with ID: ", docRef.id);
       })
       .catch((error) => {
         console.error("Error writing document: ", error);
@@ -162,21 +161,25 @@ class App {
   }
 
   fetchPostsFromDB() {
-    db.collection("users").doc(this.userId).get()
-      .then((doc) => {
-        if (doc.exists) {
-          const userData = doc.data();
-          const userPosts = userData.posts || [];
-          this.posts = userPosts;
-          this.renderPosts(this.posts);
-        } else {
-          console.log("User document not found");
-        }
+    db.collection("posts")
+      .get()
+      .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          const postData = doc.data();
+          const posts = postData.posts;
+          this.posts = [...this.posts, ...posts];
+          console.log(this.posts);
+        });
+
+        this.renderPosts(this.posts);
+        
+
       })
       .catch((error) => {
-        console.error("Error getting user's posts: ", error);
+        console.error("Error getting posts: ", error);
       });
   }
+
 
 
   renderPosts(posts) {
@@ -187,6 +190,10 @@ class App {
       postElement.classList.add("post");
 
       const profilePictureSrc = post.profilePicture ? post.profilePicture : '/assets/user-icon.jpeg';
+      const isCurrentUserPost = post.username === this.user.displayName;
+
+      const modalId = `optionsModal_${post.id}`;
+      this.selectedPostId = post.id;
 
       postElement.innerHTML = `
         <div class="header">
@@ -196,7 +203,7 @@ class App {
             </div>
             <span class="profile-name">${post.username}</span>
           </div>
-          <div class="options">
+          <div class="options" id="optionsButton">
             <div class="Igw0E rBNOH YBx95 _4EzTm" style="height: 24px; width: 24px">
               <svg aria-label="More options" class="_8-yf5" fill="#262626" height="16" viewBox="0 0 48 48" width="16">
                 <circle clip-rule="evenodd" cx="8" cy="24" fill-rule="evenodd" r="4.5"></circle>
@@ -207,11 +214,29 @@ class App {
           </div>
         </div>
         <div class="body">
-          <img alt="Photo by } on ${post.postDate}. ${post.imageDescription}" class="FFVAD" decoding="auto" sizes="614px" src="${post.fileUrl}" style="object-fit: cover" />
-          <p><span class="profile-name">${post.username} </span> ${post.caption}</p>
+          <img alt="Photo by ${post.username} on ${post.postDate}. ${post.imageDescription}" class="FFVAD" decoding="auto" sizes="614px" src="${post.fileUrl}" style="object-fit: cover" />
+          <p>${post.caption}</p>
         </div>
         <div class="footer">
-         
+          <div class="modal" id="${modalId}">
+            <div class="modal-content">
+              ${isCurrentUserPost
+          ? `<a href="#" class="modal-option">Edit</a>
+                   <hr />
+                   <a href="#" class="modal-option delete">Delete</a>`
+          : `<a href="#" class="modal-option">Report</a>
+                   <hr />
+                   <a href="#" class="modal-option">Unfollow</a>
+                   <hr />
+                   <a href="#" class="modal-option">Go to post</a>
+                   <hr />
+                   <a href="#" class="modal-option">Share to</a>
+                   <hr />
+                   <a href="#" class="modal-option">Embed</a>`}
+              <hr />
+              <a href="#" class="modal-option-cancel">Cancel</a>
+            </div>
+          </div>
         </div>
         <div class="add-comment">
           <input type="text" placeholder="Add a comment..." />
@@ -220,12 +245,36 @@ class App {
       `;
 
       postContainer.appendChild(postElement);
+
+      const optionsButton = postElement.querySelector("#optionsButton");
+      const optionsModal = postElement.querySelector(`#${modalId}`);
+
+      optionsButton.addEventListener("click", (event) => {
+        event.preventDefault();
+        console.log("Button clicked");
+
+        optionsModal.style.display = "block";
+      });
+
+      const cancelOption = optionsModal.querySelector(".modal-content");
+cancelOption.addEventListener("click", (event) => {
+  event.preventDefault();
+  optionsModal.style.display = "none";
+});
+
+
     });
+
   }
 
 
 
+
   addEventListeners() {
+    document.body.addEventListener("click", (event) => {
+      this.handleArchiving(event);
+    });
+
     this.$logoutButton.addEventListener("click", (event) => {
       this.handleLogout();
     })
@@ -245,7 +294,28 @@ class App {
       event.preventDefault();
       this.handleFileUpload();
     });
+
+    
   }
+
+  handleArchiving(event) {
+    const $selectedPost = event.target.closest(".post");
+    
+    if ($selectedPost && event.target.closest(".delete")) {
+      console.log("post id:", this.selectedPostId);
+      this.selectedPostId = $selectedPost.id;
+      this.deletePost(this.selectedPostId);
+    } else {
+      return;
+    }
+  }
+
+  deletePost(id) {
+    this.posts = this.posts.filter((post) => post.id != id );
+    console.log("posts:", this.posts);
+  }
+
+
 
 
 }
