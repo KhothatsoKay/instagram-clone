@@ -362,6 +362,14 @@ main {
     justify-content: center;
     align-items: center;
 }
+.profile-image{
+    height: 40px;
+    width: 30px;
+}
+.profile-image img{
+    height: 30px;
+    width: 30px;
+}
 #uploadForm{
     display: flex;
     flex-direction: column;

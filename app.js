@@ -57,8 +57,14 @@ class App {
         this.userId = user.uid;
         this.$authUserText.innerHTML = user.displayName;
         this.$authUser.innerHTML = user.displayName;
-          this.$userProfilePicture.innerHTML = `<img class="story-image" alt="akhilboddu's profile picture" data-testid="user-avatar" draggable="false"
+        if(user.photoURL != null){
+          this.$userProfilePicture.innerHTML = `<img alt="akhilboddu's profile picture" data-testid="user-avatar" draggable="false"
           src=${user.photoUrl}/>`
+      }
+      else{
+        this.$userProfilePicture.innerHTML = `<img alt="akhilboddu's profile picture" data-testid="user-avatar" draggable="false"
+          src="/assets/user-icon.jpeg"/>`
+      }
         this.redirectToApp();
       } else {
         this.redirectToAuth();
@@ -179,7 +185,7 @@ class App {
         console.error("Error getting posts: ", error);
       });
   }
-
+  
 
 
   renderPosts(posts) {
@@ -271,9 +277,7 @@ cancelOption.addEventListener("click", (event) => {
 
 
   addEventListeners() {
-    document.body.addEventListener("click", (event) => {
-      this.handleArchiving(event);
-    });
+    
 
     this.$logoutButton.addEventListener("click", (event) => {
       this.handleLogout();
@@ -305,14 +309,15 @@ cancelOption.addEventListener("click", (event) => {
       console.log("post id:", this.selectedPostId);
       this.selectedPostId = $selectedPost.id;
       this.deletePost(this.selectedPostId);
+      this.RemoveFromDB();
     } else {
       return;
     }
   }
 
   deletePost(id) {
-    this.posts = this.posts.filter((post) => post.id != id );
-    console.log("posts:", this.posts);
+    this.posts = this.posts.filter((post) => post.id !== id );
+  
   }
 
 
