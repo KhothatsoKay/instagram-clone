@@ -57,10 +57,11 @@ class App {
         this.userId = user.uid;
         this.$authUserText.innerHTML = user.displayName;
         this.$authUser.innerHTML = user.displayName;
-        if(this.user.photoURL != null){
-          this.$userProfilePicture.innerHTML = `<img alt="profile picture" data-testid="user-avatar" draggable="false"
-          src=${this.user.photoUrl} />`
-          
+        const profilePic = this.user.photoURL;
+        if(profilePic != null){
+          this.$userProfilePicture.innerHTML = `<img  data-testid="user-avatar" draggable="false"
+          src=${profilePic} />`
+          console.log("pic: ", profilePic);
       }
       else{
         this.$userProfilePicture.innerHTML = `<img alt="profile picture" data-testid="user-avatar" draggable="false"
