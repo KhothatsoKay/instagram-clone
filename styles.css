@@ -356,6 +356,9 @@ main {
 .logout{
     cursor: pointer;
 }
+.liked{
+    font-size: 14px;
+}
 #upload-container{
     display: flex;
     flex-direction: column;

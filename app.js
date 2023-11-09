@@ -58,11 +58,11 @@ class App {
         this.$authUserText.innerHTML = user.displayName;
         this.$authUser.innerHTML = user.displayName;
         if(user.photoURL != null){
-          this.$userProfilePicture.innerHTML = `<img alt="akhilboddu's profile picture" data-testid="user-avatar" draggable="false"
+          this.$userProfilePicture.innerHTML = `<img alt=" profile picture" data-testid="user-avatar" draggable="false"
           src=${user.photoUrl}/>`
       }
       else{
-        this.$userProfilePicture.innerHTML = `<img alt="akhilboddu's profile picture" data-testid="user-avatar" draggable="false"
+        this.$userProfilePicture.innerHTML = `<img alt="profile picture" data-testid="user-avatar" draggable="false"
           src="/assets/user-icon.jpeg"/>`
       }
         this.redirectToApp();
@@ -128,7 +128,7 @@ class App {
           },
           () => {
             uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
-              const post = new Post(Date.now(), downloadURL, captionValue, this.user.displayName, this.user.photoURL); // Use this.user
+              const post = new Post(Date.now(), downloadURL, captionValue, this.user.displayName, this.user.photoURL); 
               console.log("User object:", this.user);
               this.posts.push(post);
               this.savePosts();
@@ -224,7 +224,8 @@ class App {
         </div>
         <div class="body">
           <img alt="Photo by ${post.username} on ${post.postDate}. ${post.imageDescription}" class="FFVAD" decoding="auto" sizes="614px" src="${post.fileUrl}" style="object-fit: cover" />
-          <p>${post.caption}</p>
+          <p class="liked">Liked by <span class="profile-name">ishitaaa.b</span> and <span class="profile-name">others</span></p>
+       <p><span class="profile-name">${post.username}</span>  ${post.caption}</p>
         </div>
         <div class="footer">
           <div class="modal" id="${modalId}">
@@ -247,6 +248,14 @@ class App {
             </div>
           </div>
         </div>
+        <span class="comment">
+        <span class="caption-username"><b>akhilboddu</b></span>
+        <span class="caption-text">Thank you</span>
+      </span>
+      <span class="comment">
+        <span class="caption-username"><b>imharjot</b></span>
+        <span class="caption-text"> Great stuff</span>
+      </span>
         <div class="add-comment">
           <input type="text" placeholder="Add a comment..." />
           <a class="post-btn">Post</a>
