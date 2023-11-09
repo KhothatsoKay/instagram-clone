@@ -57,15 +57,17 @@ class App {
         this.userId = user.uid;
         this.$authUserText.innerHTML = user.displayName;
         this.$authUser.innerHTML = user.displayName;
-        if(user.photoURL != null){
-          this.$userProfilePicture.innerHTML = `<img alt=" profile picture" data-testid="user-avatar" draggable="false"
-          src=${user.photoUrl}/>`
+        if(this.user.photoURL != null){
+          this.$userProfilePicture.innerHTML = `<img alt="profile picture" data-testid="user-avatar" draggable="false"
+          src=${this.user.photoUrl} />`
+          
       }
       else{
         this.$userProfilePicture.innerHTML = `<img alt="profile picture" data-testid="user-avatar" draggable="false"
           src="/assets/user-icon.jpeg"/>`
       }
         this.redirectToApp();
+        
       } else {
         this.redirectToAuth();
       }
