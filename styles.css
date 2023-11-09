@@ -353,10 +353,21 @@ main {
 .body img {
     width: 100%;
 }
+.auth-actions{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 15px;
+
+}
+.auth-actions button{
+    margin-left: 5px;
+    padding: 2px;
+}
 .auth-user{
     font-size: 14px;
-    margin: 10px;
-    margin-bottom: 15px;
+    margin: 0 10px 15px 10px;
 }
 .logout{
     cursor: pointer;
