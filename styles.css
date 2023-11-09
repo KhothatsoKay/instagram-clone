@@ -353,6 +353,11 @@ main {
 .body img {
     width: 100%;
 }
+.auth-user{
+    font-size: 14px;
+    margin: 10px;
+    margin-bottom: 15px;
+}
 .logout{
     cursor: pointer;
 }

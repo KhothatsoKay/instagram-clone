@@ -61,7 +61,6 @@ class App {
         if(profilePic != null){
           this.$userProfilePicture.innerHTML = `<img  data-testid="user-avatar" draggable="false"
           src=${profilePic} />`
-          console.log("pic: ", profilePic);
       }
       else{
         this.$userProfilePicture.innerHTML = `<img alt="profile picture" data-testid="user-avatar" draggable="false"
