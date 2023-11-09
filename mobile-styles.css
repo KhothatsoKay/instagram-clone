@@ -9,6 +9,10 @@
     .navbar-inner {
         width: 100%;
     }
+    .modal{
+        margin-right: 800px !important;
+        color: red;
+    }
 }
 
 @media (max-width: 640px) {
@@ -28,4 +32,18 @@
         border: none;
         background: transparent;
     }
+    .modal {
+        display: none;
+        position: absolute;
+        background-color: rgb(255, 0, 0);
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        z-index: 1;
+        width: 300px;
+        height: auto;
+        text-align: center;
+        margin-left: 50px;
+        margin-top:  250px;
+      }
+    
 }
